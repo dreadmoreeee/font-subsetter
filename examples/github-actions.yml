@@ -1,0 +1,27 @@
+# Example: rebuild font subsets from the built site on every push.
+# Copy to .github/workflows/fonts.yml in your own site repository.
+name: fonts
+on:
+  push:
+    branches: [main]
+jobs:
+  subset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "font-subsetter[woff2] @ git+https://github.com/dreadmoreeee/font-subsetter"
+      # Local HTML needs no browser. Use --url (and `python -m playwright install chromium`)
+      # to read pages that build their text with JavaScript.
+      - run: >
+          font-subsetter fonts/src/*.woff2
+          --html "public/**/*.html" --split --preset latin
+          --out public/fonts --url-prefix /fonts/ --json > font-report.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fonts
+          path: |
+            public/fonts
+            font-report.json

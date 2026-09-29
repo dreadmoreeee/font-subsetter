@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.venv/
+# Local runs and the real-site demonstration (downloaded fonts stay private)
+subset/
+demo/
